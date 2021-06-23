@@ -7,24 +7,21 @@
 {% endblock %}
 {% block body %}
 
-{{Result}}
 <div class="content">
     <h1 style="text-align: center">Calculator</h1>
 
 
     <div class="form">
-        <form action="/math" method="POST">
-            <label for="operation">Choose a Mathematical Operation</label>
+        <form action="/signinchooser" method="POST">
+            <label for="signinchoose">Choose a Sign-Up or Log-In</label>
 
-            <select id="operation" name="operation">
-              <option value="square">Square</option>
-              <option value="cube">Cube</option>
-              <option value="factorial">Factorial</option>
-              <option value="evod">Even/Odd</option>
+            <select id="signinchoose" name="signinchoose">
+              <option value="register">Register</option>
+              <option value="login">Login</option>
             </select>
-            <input type="text" name="num1" id="num1">
-            <!-- <input type="text" name="num2" id="num2">  -->
-            <input type="submit" value="Calculate">
+            <input type="text" name="username" id="username">
+            <input type="text" name="password" id="password">
+            <input type="submit" value="Login">
         </form>
     </div>
 </div>
