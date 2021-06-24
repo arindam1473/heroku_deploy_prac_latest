@@ -55,20 +55,35 @@ def login_page():
     if signinchoose == 'register':
         try:
             print('Trying to register')
-            usr_nm = connect_database(username,password,signinchoose)
+            #get_flag = connect_database(username,password,signinchoose)
+            collection = connect_database()
+            get_flag = register_user(username,password,collection)
+
+            print(get_flag)
+            if get_flag == 'flag1':
+                return render_template('errors.html',result='You are already registered, Please Login')
+            elif get_flag == 'flag0':
+                return render_template('welcome.html',result='Welcome '+str(username)+' Hope you are fine')
+            elif get_flag == 'flag_error':
+                return render_template('errors.html',result=str('You are not allowed,Please Sign-up/Register properly'))
             print('Con DB')
         except Exception as e:
             result = 'Register is not Successful..'
             return render_template('errors.html',result=result)
     elif signinchoose== 'login':
         print('Trying to fetch user')
-        result = connect_database(username, password,signinchoose)
-        return render_template('welcome.html', result=result)
+        #result = connect_database(username, password,signinchoose)
+        collection = connect_database()
+        result = verify_user_pass(username,password,collection)
+        if result=='flag_login_error':
+            return render_template('errors.html', result='Username/Password Not matched')
+        else :
+            return render_template('welcome.html', result=result)
 
     return render_template('results.html', result=usr_nm)
 
 
-def connect_database(username,password,signinchoose):
+def connect_database():
     client = pymongo.MongoClient(
         "mongodb://raj:raj@cluster0-shard-00-00.txvde.mongodb.net:27017,cluster0-shard-00-01.txvde.mongodb.net:27017,cluster0-shard-00-02.txvde.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-13xnq3-shard-0&authSource=admin&retryWrites=true&w=majority")
     db = client.test
@@ -76,20 +91,9 @@ def connect_database(username,password,signinchoose):
     db_lp = client['heroku_deploy_project']
     collection = db_lp['login_details']
     print('DB Connect')
-    if signinchoose=='register':
-        ins_record={
-            'username':username,
-            'password':password
-        }
-        collection.insert_one(ins_record)
-    elif signinchoose == 'login':
-        print('In Login')
-        res = verify_user_pass(username,password,collection)
-        print(res)
-        return res
 
+    return collection  #Trying to return the connection
 
-    return str(username)
 
 def verify_user_pass(username,password,collection):
     for usr in collection.find({'username': username, 'password': password}):
@@ -102,7 +106,24 @@ def verify_user_pass(username,password,collection):
                     return result
         else:
             return render_template('errors.html', result='Your user not found')
+    return str('flag_login_error')
 
+def register_user(username,password,collection):
+    try:
+        for srch_usr in collection.find({'username':username}):
+            if type(srch_usr)==dict:
+                print('usr found')
+                return str('flag1')
+    except Exception as e:
+        ins_record = {
+            'username': username,
+            'password': password
+        }
+
+        collection.insert_one(ins_record)
+        print('in reg usr last')
+        return str('flag0')
+    return str('flag_error')
 
 
 
