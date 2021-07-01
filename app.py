@@ -56,6 +56,14 @@ def login_page():
     print('got usr pass')
     usr_nm='kothay vai'
     if signinchoose == 'register':
+
+        allowedornot = validate_username_password(username,password)
+        print(allowedornot)
+        if allowedornot == True:
+            print("validated_username_password")
+        else:
+            return render_template('errors.html', result='Blank User/Password Not Allowed')
+
         try:
             print('Trying to register')
             #get_flag = connect_database(username,password,signinchoose)
@@ -67,6 +75,7 @@ def login_page():
             if get_flag == 'flag1':
                 return render_template('errors.html',result='You are already registered, Please Login')
             elif get_flag == 'flag0':
+                insert_new_user(username,password,collection)
                 return render_template('welcome.html',result='Welcome '+str(username)+' Hope you are fine')
             elif get_flag == 'flag_error':
                 return render_template('errors.html',result=str('You are not allowed,Please Sign-up/Register properly'))
@@ -75,6 +84,12 @@ def login_page():
             result = 'Register is not Successful..'
             return render_template('errors.html',result=result)
     elif signinchoose== 'login':
+        allowedornot = validate_username_password(username, password)
+        print(allowedornot)
+        if allowedornot == True:
+            print("validated_username_password")
+        else:
+            return render_template('errors.html', result='Blank User/Password Not Allowed')
         print('Trying to fetch user')
         #result = connect_database(username, password,signinchoose)
         collection = connect_database()
@@ -86,6 +101,14 @@ def login_page():
 
     return render_template('results.html', result=usr_nm)
 
+def validate_username_password(username,password):
+    if not username or not password:
+        print('usr is**' + username + '**' + str(type(username)))
+        print('pswd is**' + password + '**' + str(type(password)))
+        return False
+    else:
+        print('Continue as BAU Code')
+        return True
 
 def connect_database():
     client = pymongo.MongoClient(
@@ -121,20 +144,23 @@ def register_user(username,password,collection):
         for srch_usr in collection.find({'username':username}):
             if type(srch_usr)==dict:
                 print('usr found')
-                return str('flag1')
+                return str('flag1') #Returning flag1 as username found in DB
     except Exception as e:
-        print('in except')
-        ins_record = {
-            'username': username,
-            'password': password
-        }
-
-        collection.insert_one(ins_record)
-        print('in reg usr last')
-        return str('flag0')
+        print(e)
+        print('Shit Happended')
 
     return str('flag0')
 
+def insert_new_user(username,password,collection):
+    print('in except')
+    ins_record = {
+        'username': username,
+        'password': password
+    }
+
+    collection.insert_one(ins_record)
+    print('in reg usr last')
+    return str('flag0')
 
 
 
