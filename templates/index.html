@@ -23,6 +23,16 @@
             <input type="text" name="password" id="password">
             <input type="submit" value="Login">
         </form>
+        <div class="form">
+        <form action="/deregister" method="POST">
+            <label for="unregister">Unregister Yourself</label>
+
+            <select id="unregister" name="unregister">
+              <option value="unregister">Unresgister</option>
+            </select>
+            <input type="text" name="dereg_usrname" id="dereg_usrname">
+            <input type="submit" value="Delete">
+        </form>
     </div>
 </div>
 {% endblock %}

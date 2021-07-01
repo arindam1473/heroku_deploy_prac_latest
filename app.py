@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request,jsonify
 import pymongo
 import ssl
-
+from deregister import cnvrt_blueprint
 
 app = Flask(__name__)
+app.register_blueprint(cnvrt_blueprint)
+
+
 
 @app.route('/', methods=['GET','POST'])
 def home_page():
@@ -57,6 +60,7 @@ def login_page():
             print('Trying to register')
             #get_flag = connect_database(username,password,signinchoose)
             collection = connect_database()
+            print("Somethig issue ?")
             get_flag = register_user(username,password,collection)
 
             print(get_flag)
@@ -109,12 +113,17 @@ def verify_user_pass(username,password,collection):
     return str('flag_login_error')
 
 def register_user(username,password,collection):
+    print('Registering'+ str(username))
+    print('Registering' + str(password))
+    print('Registering' + str(collection))
     try:
+        print('At least in try')
         for srch_usr in collection.find({'username':username}):
             if type(srch_usr)==dict:
                 print('usr found')
                 return str('flag1')
     except Exception as e:
+        print('in except')
         ins_record = {
             'username': username,
             'password': password
@@ -123,7 +132,8 @@ def register_user(username,password,collection):
         collection.insert_one(ins_record)
         print('in reg usr last')
         return str('flag0')
-    return str('flag_error')
+
+    return str('flag0')
 
 
 
