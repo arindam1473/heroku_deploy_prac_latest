@@ -12,25 +12,38 @@
 
 
     <div class="form">
-        <form action="/signinchooser" method="POST">
-            <label for="signinchoose">Choose a Sign-Up or Log-In</label>
+        <form action="/login" method="POST">
+            <label for="signin">Click here to Sign-In</label>
 
-            <select id="signinchoose" name="signinchoose">
-              <option value="register">Register</option>
-              <option value="login">Login</option>
+            <select id="signin" name="signin">
+              <!--<option value="register">Register</option> -->
+              <option value="login">Signin</option>
             </select>
-            <input type="text" name="username" id="username">
-            <input type="text" name="password" id="password">
+            <input type="text" name="lgn_username" id="lgn_username">
+            <input type="text" name="lgn_password" id="lgn_password">
             <input type="submit" value="Login">
         </form>
+
         <div class="form">
-        <form action="/deregister" method="POST">
+        <form action="/register" method="POST">
+            <label for="register">Don't have account, Sign-up Yourself</label>
+
+            <select id="register" name="register">
+              <option value="register">Sign-up</option>
+            </select>
+            <input type="text" name="reg_usrname" id="reg_usrname">
+            <input type="text" name="reg_password" id="reg_password">
+            <input type="submit" value="Sign-up">
+        </form>
+        <div class="form">
+            <form action="/deregister" method="POST">
             <label for="unregister">Unregister Yourself</label>
 
             <select id="unregister" name="unregister">
               <option value="unregister">Unresgister</option>
             </select>
             <input type="text" name="dereg_usrname" id="dereg_usrname">
+            <input type="text" name="dereg_usrpaswrd" id="dereg_usrpaswrd">
             <input type="submit" value="Delete">
         </form>
     </div>
